@@ -12,7 +12,8 @@ Fully client-side version of Token2 TOTP Toolset (Token2 TOTP Toolset - local), 
 
 ## Demo
 https://www.token2.com/site/page/totp-toolset
-(Note! This demo does not use jQuery-qrcode library - QR is generated using Google Charts)
+
+Note! This demo is slightly different (i.e. the design is not the same and it does not use jQuery-qrcode library - QR is generated using Google Charts), but functionality is exactly the same
 
 
 ## Following libraries were used
