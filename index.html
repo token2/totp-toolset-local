@@ -41,7 +41,8 @@
                       <center> <div  class="alert alert-info">  
 					 
 					  
-					  <div class="input"><input type="text" size="50" name="secret" id="secret" class="xlarge" value="JBSWY3DPEHPK3PXP" /> 
+					  <div class="input">
+		<input type="text" size="50" name="secret" id="secret" class="xlarge" value="JBSWY3DPEHPK3PXP" onchange="updateOtp();   return false; " onKeyup="updateOtp();   return false; " onClick="updateOtp();   return false;  " /> 
 					  <button class="btn btn-primary btn-sm" onclick=" inputHex(); updateOtp();   return false;">⇥ enter HEX</button>
 					  
 					  <button class="btn btn-primary btn-sm" onclick="$('#secret').val(randombase32()); updateOtp();   return false;">↝ random</button>
