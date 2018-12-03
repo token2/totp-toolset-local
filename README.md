@@ -1,6 +1,14 @@
 # Token2 TOTP Toolset - local
 Fully client-side version of Token2 TOTP Toolset (Token2 TOTP Toolset - local), which can be run locally without accessing any libraries/resources on the Internet (including the QR image generation).
 
+### Features
+* convert hex seed to base32 format
+* generate QR image based on hex or base32 seed key values
+* generate random seed values (i.e. for Token2 programmable tokens)
+* verify the time drift with customizable skew value
+* create CSV for Azure MFA import
+
+
 
 ## Demo
 https://www.token2.com/site/page/totp-toolset
