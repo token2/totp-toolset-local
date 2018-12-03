@@ -3,7 +3,7 @@ Fully client-side version of Token2 TOTP Toolset (Token2 TOTP Toolset - local), 
 
 
 ## Demo
-https://www.token2.com/shop/page/totp-toolset
+https://www.token2.com/site/page/totp-toolset
 
 
 
