@@ -18,7 +18,7 @@ Note! This demo is slightly different (i.e. the design is not the same and it do
 
 ## Following libraries were used
 
-jQuery v3.3.1 | (c) JS Foundation and other contributors | jquery.org/license 
+jQuery 3.7.1 | (c) JS Foundation and other contributors | jquery.org/license 
 
 jQuery-qrcode v0.14.0 - https://larsjung.de/jquery-qrcode/ 
 
