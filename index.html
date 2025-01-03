@@ -99,7 +99,7 @@
   </div>
   <div class="form-group">
     <label for="exampleInputPassword1">Token model <sup>separate brand and model with a comma</sup></label>
-    <input type="text" class="form-control" id=name name=name value="Token2,miniOTP-1">
+    <input type="text" class="form-control" id=name name=name value="Token2,C301i">
   </div>
   <div class="form-group">
     <label for="exampleInputPassword1">Username <sup>as UPN </sup></label>
@@ -126,6 +126,14 @@
 		<textarea id=AzureCSV name=AzureCSV style="width:100%;" rows=15 cols=20>upn,serial number,secret key,timeinterval,manufacturer,model</textarea>
 			
       </div>
+	  
+	  	   	<div class="container  ">
+        <h3  >JSON file generation <sup>for Entra  Graph API Method </sup></h3>
+    				 <span style="float:right"><button class="btn btn-primary btn-sm" onclick="addJSON(); return false;"> ⇲ generate JSON  </button> </span>	<br>
+		<textarea id=JSON name=JSON style="width:100%;" rows=15 cols=20></textarea>
+			
+      </div>
+	  
 	  </form>
 <script>
 $(document).ready(function() {
@@ -407,7 +415,30 @@ function timer()
  document.frmConvert.AzureCSV.value=document.frmConvert.AzureCSV.value+"\n"+document.frmConvert.upn.value+","+ document.frmConvert.serial.value+','+document.frmConvert.secret.value+",30,"+document.frmConvert.name.value ;
 	 
 	 
-		} 		
+		} 
+
+
+
+function addJSON() {
+	
+document.frmConvert.JSON.value = JSON.stringify({
+    "@context": "#$delta",
+    "value": [
+        {
+            "@contentId": "1",
+            "serialNumber": document.frmConvert.serial.value,
+            "manufacturer": "Token2",
+            "model": "TOTPSHA1",
+            "secretKey": document.frmConvert.secret.value,
+            "timeIntervalInSeconds": 30,
+            "hashFunction": "hmacsha1"
+        }
+    ]
+}, null, 4); // Indentation with 4 spaces
+
+
+}
+		
 </script>
 		
 		</html>

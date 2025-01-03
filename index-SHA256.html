@@ -121,10 +121,10 @@
 
 
 	
-	  	<div class="container">
-        <h3  >CSV generation <sup>csv in Azure MFA format</sup></h3>
-    				 <span style="float:right"><button class="btn btn-primary btn-sm" onclick="addCSV(); return false;"> ⇲ append to CSV  </button> <button type="button" class="btn btn-secondary btn-sm" onclick="download()">save as file</button></span>	<br>
-		<textarea id=AzureCSV name=AzureCSV style="width:100%;" rows=15 cols=20>upn,serial number,secret key,timeinterval,manufacturer,model</textarea>
+	  	   	<div class="container  ">
+        <h3  >JSON file generation <sup>for Entra  Graph API Method </sup></h3>
+    				 <span style="float:right"><button class="btn btn-primary btn-sm" onclick="addJSON(); return false;"> ⇲ generate JSON  </button> </span>	<br>
+		<textarea id=JSON name=JSON style="width:100%;" rows=15 cols=20></textarea>
 			
       </div>
 	  </form>
@@ -415,6 +415,28 @@ function timer()
 	 
 	 
 		} 		
+		
+		
+		function addJSON() {
+	
+document.frmConvert.JSON.value = JSON.stringify({
+    "@context": "#$delta",
+    "value": [
+        {
+            "@contentId": "1",
+            "serialNumber": document.frmConvert.serial.value,
+            "manufacturer": "Token2",
+            "model": "TOTPSHA256",
+            "secretKey": document.frmConvert.secret.value,
+            "timeIntervalInSeconds": 30,
+            "hashFunction": "hmacsha256"
+        }
+    ]
+}, null, 4); // Indentation with 4 spaces
+
+
+}
+
 </script>
 		
 		</html>
