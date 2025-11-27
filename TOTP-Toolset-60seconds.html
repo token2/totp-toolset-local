@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Time Drift Calculator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 700px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1a2a6c, #b21f1f, #fdbb2d);
+        }
+        
+        h1 {
+            color: #1a2a6c;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            border-color: #1a2a6c;
+            box-shadow: 0 0 0 3px rgba(26, 42, 108, 0.2);
+            outline: none;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        button {
+            flex: 1;
+            background: linear-gradient(to right, #1a2a6c, #2a3a9c);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(to right, #2a3a9c, #3a4aac);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button.secondary {
+            background: linear-gradient(to right, #b21f1f, #c22f2f);
+        }
+        
+        button.secondary:hover {
+            background: linear-gradient(to right, #c22f2f, #d23f3f);
+        }
+        
+        .results {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .time-info {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #1a2a6c;
+        }
+        
+        .otp-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .otp-table th {
+            background: linear-gradient(to right, #1a2a6c, #2a3a9c);
+            color: white;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .otp-table td {
+            padding: 16px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .otp-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .otp-table tr:hover {
+            background-color: #f0f2f5;
+        }
+        
+        .otp-code {
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            font-weight: bold;
+            color: #1a2a6c;
+            letter-spacing: 2px;
+        }
+        
+        .past {
+            color: #b21f1f;
+            font-weight: 600;
+        }
+        
+        .future {
+            color: #28a745;
+            font-weight: 600;
+        }
+        
+        .current {
+            color: #1a2a6c;
+            font-weight: 700;
+        }
+        
+        .explanation {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #fdbb2d;
+        }
+        
+        .explanation h3 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .explanation p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 600px) {
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OTP Time Drift Calculator</h1>
+        <p class="subtitle">Calculate OTP values for different time offsets</p>
+        
+        <div class="input-group">
+            <label for="seed">Seed (Base32 encoded):</label>
+            <input type="text" id="seed" placeholder="Enter your base32 seed (e.g., JBSWY3DPEHPK3PXP)" value="JBSWY3DPEHPK3PXP">
+        </div>
+        
+        <div class="button-group">
+            <button onclick="calculateOTPs()">Calculate OTP Table</button>
+            <button class="secondary" onclick="generateRandomSeed()">Generate Random Seed</button>
+        </div>
+        
+        <div class="results" id="results">
+            <div class="time-info" id="timeInfo"></div>
+            <table class="otp-table">
+                <thead>
+                    <tr>
+                        <th>Time Drift</th>
+                        <th>OTP Code</th>
+                    </tr>
+                </thead>
+                <tbody id="otpTableBody">
+                    <!-- OTP values will be populated here -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="explanation">
+            <h3>How It Works</h3>
+            <p>This calculator generates Time-based One-Time Passwords (TOTP) for different time offsets. The algorithm follows the RFC 6238 standard.</p>
+            <p><strong>Time Drifts:</strong> Shows OTP values for -120, -60, 0, +60, and +120 seconds from the current time.</p>
+            <p><strong>Base32 Seed:</strong> The secret key used to generate OTP codes. Keep this secure!</p>
+        </div>
+    </div>
+
+    <script>
+        // Base32 character set
+        const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+        
+        // Generate a random base32 seed
+        function generateRandomSeed() {
+            let result = '';
+            for (let i = 0; i < 16; i++) {
+                result += base32Chars.charAt(Math.floor(Math.random() * base32Chars.length));
+            }
+            document.getElementById('seed').value = result;
+        }
+        
+        // Base32 decoding function
+        function base32Decode(base32) {
+            base32 = base32.replace(/=+$/, '').toUpperCase();
+            let bits = '';
+            let result = '';
+            
+            for (let i = 0; i < base32.length; i++) {
+                const val = base32Chars.indexOf(base32.charAt(i));
+                if (val === -1) throw new Error('Invalid base32 character: ' + base32.charAt(i));
+                bits += val.toString(2).padStart(5, '0');
+            }
+            
+            for (let i = 0; i + 8 <= bits.length; i += 8) {
+                const byte = bits.substr(i, 8);
+                result += String.fromCharCode(parseInt(byte, 2));
+            }
+            
+            return result;
+        }
+        
+        // Convert string to byte array
+        function strToBytes(str) {
+            const bytes = [];
+            for (let i = 0; i < str.length; i++) {
+                bytes.push(str.charCodeAt(i) & 0xFF);
+            }
+            return bytes;
+        }
+        
+        // Convert byte array to hex string
+        function bytesToHex(bytes) {
+            return bytes.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+        
+        // HMAC-SHA1 implementation
+        function hmacSha1(keyBytes, messageBytes) {
+            // Pad key to 64 bytes
+            const blockSize = 64;
+            if (keyBytes.length > blockSize) {
+                keyBytes = strToBytes(sha1(bytesToHex(keyBytes)));
+            }
+            
+            if (keyBytes.length < blockSize) {
+                const paddedKey = new Array(blockSize);
+                for (let i = 0; i < blockSize; i++) {
+                    paddedKey[i] = i < keyBytes.length ? keyBytes[i] : 0;
+                }
+                keyBytes = paddedKey;
+            }
+            
+            // Create inner and outer padding
+            const ipad = new Array(blockSize);
+            const opad = new Array(blockSize);
+            
+            for (let i = 0; i < blockSize; i++) {
+                ipad[i] = keyBytes[i] ^ 0x36;
+                opad[i] = keyBytes[i] ^ 0x5C;
+            }
+            
+            // Calculate inner hash
+            const innerMsg = ipad.concat(messageBytes);
+            const innerHash = strToBytes(sha1(bytesToHex(innerMsg)));
+            
+            // Calculate outer hash
+            const outerMsg = opad.concat(innerHash);
+            return sha1(bytesToHex(outerMsg));
+        }
+        
+        // SHA1 implementation
+        function sha1(msg) {
+            function rotateLeft(n, s) {
+                return (n << s) | (n >>> (32 - s));
+            }
+            
+            function cvtHex(val) {
+                let str = "";
+                for (let i = 7; i >= 0; i--) {
+                    str += ((val >>> (i * 4)) & 0x0F).toString(16);
+                }
+                return str;
+            }
+            
+            let blockstart;
+            let i, j;
+            const W = new Array(80);
+            let H0 = 0x67452301;
+            let H1 = 0xEFCDAB89;
+            let H2 = 0x98BADCFE;
+            let H3 = 0x10325476;
+            let H4 = 0xC3D2E1F0;
+            let A, B, C, D, E;
+            let temp;
+            
+            // Convert string to array of bytes
+            const msgBytes = [];
+            for (i = 0; i < msg.length; i += 2) {
+                msgBytes.push(parseInt(msg.substr(i, 2), 16));
+            }
+            
+            const msgLen = msgBytes.length;
+            const wordArray = [];
+            
+            for (i = 0; i < msgLen - 3; i += 4) {
+                j = msgBytes[i] << 24 | msgBytes[i + 1] << 16 | msgBytes[i + 2] << 8 | msgBytes[i + 3];
+                wordArray.push(j);
+            }
+            
+            switch (msgLen % 4) {
+                case 0:
+                    i = 0x080000000;
+                    break;
+                case 1:
+                    i = msgBytes[msgLen - 1] << 24 | 0x0800000;
+                    break;
+                case 2:
+                    i = msgBytes[msgLen - 2] << 24 | msgBytes[msgLen - 1] << 16 | 0x08000;
+                    break;
+                case 3:
+                    i = msgBytes[msgLen - 3] << 24 | msgBytes[msgLen - 2] << 16 | msgBytes[msgLen - 1] << 8 | 0x080;
+                    break;
+            }
+            
+            wordArray.push(i);
+            
+            while ((wordArray.length % 16) != 14) {
+                wordArray.push(0);
+            }
+            
+            wordArray.push(msgLen >>> 29);
+            wordArray.push((msgLen << 3) & 0x0FFFFFFFF);
+            
+            for (blockstart = 0; blockstart < wordArray.length; blockstart += 16) {
+                for (i = 0; i < 16; i++) {
+                    W[i] = wordArray[blockstart + i];
+                }
+                
+                for (i = 16; i <= 79; i++) {
+                    W[i] = rotateLeft(W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16], 1);
+                }
+                
+                A = H0;
+                B = H1;
+                C = H2;
+                D = H3;
+                E = H4;
+                
+                for (i = 0; i <= 19; i++) {
+                    temp = (rotateLeft(A, 5) + ((B & C) | (~B & D)) + E + W[i] + 0x5A827999) & 0x0FFFFFFFF;
+                    E = D;
+                    D = C;
+                    C = rotateLeft(B, 30);
+                    B = A;
+                    A = temp;
+                }
+                
+                for (i = 20; i <= 39; i++) {
+                    temp = (rotateLeft(A, 5) + (B ^ C ^ D) + E + W[i] + 0x6ED9EBA1) & 0x0FFFFFFFF;
+                    E = D;
+                    D = C;
+                    C = rotateLeft(B, 30);
+                    B = A;
+                    A = temp;
+                }
+                
+                for (i = 40; i <= 59; i++) {
+                    temp = (rotateLeft(A, 5) + ((B & C) | (B & D) | (C & D)) + E + W[i] + 0x8F1BBCDC) & 0x0FFFFFFFF;
+                    E = D;
+                    D = C;
+                    C = rotateLeft(B, 30);
+                    B = A;
+                    A = temp;
+                }
+                
+                for (i = 60; i <= 79; i++) {
+                    temp = (rotateLeft(A, 5) + (B ^ C ^ D) + E + W[i] + 0xCA62C1D6) & 0x0FFFFFFFF;
+                    E = D;
+                    D = C;
+                    C = rotateLeft(B, 30);
+                    B = A;
+                    A = temp;
+                }
+                
+                H0 = (H0 + A) & 0x0FFFFFFFF;
+                H1 = (H1 + B) & 0x0FFFFFFFF;
+                H2 = (H2 + C) & 0x0FFFFFFFF;
+                H3 = (H3 + D) & 0x0FFFFFFFF;
+                H4 = (H4 + E) & 0x0FFFFFFFF;
+            }
+            
+            return cvtHex(H0) + cvtHex(H1) + cvtHex(H2) + cvtHex(H3) + cvtHex(H4);
+        }
+        
+        // Generate HOTP (HMAC-based One-Time Password)
+        function generateHOTP(secret, counter) {
+            // Convert counter to 8-byte array (big-endian)
+            const counterBytes = new Array(8);
+            let tempCounter = counter;
+            
+            for (let i = 7; i >= 0; i--) {
+                counterBytes[i] = tempCounter & 0xff;
+                tempCounter = tempCounter >>> 8;
+            }
+            
+            // Decode secret
+            const secretDecoded = base32Decode(secret);
+            const secretBytes = strToBytes(secretDecoded);
+            
+            // Calculate HMAC-SHA1
+            const hmacResult = hmacSha1(secretBytes, counterBytes);
+            const hmacBytes = [];
+            
+            for (let i = 0; i < hmacResult.length; i += 2) {
+                hmacBytes.push(parseInt(hmacResult.substr(i, 2), 16));
+            }
+            
+            // Dynamic truncation
+            const offset = hmacBytes[19] & 0x0f;
+            const binary = 
+                ((hmacBytes[offset] & 0x7f) << 24) |
+                ((hmacBytes[offset + 1] & 0xff) << 16) |
+                ((hmacBytes[offset + 2] & 0xff) << 8) |
+                (hmacBytes[offset + 3] & 0xff);
+            
+            // Generate 6-digit code
+            return (binary % 1000000).toString().padStart(6, '0');
+        }
+        
+        // Generate TOTP (Time-based One-Time Password)
+        function generateTOTP(secret, timestamp) {
+            // TOTP uses time steps (usually 30 seconds)
+            const timeStep = 30;
+            const counter = Math.floor(timestamp / 1000 / timeStep);
+            return generateHOTP(secret, counter);
+        }
+        
+        function calculateOTPs() {
+            const seed = document.getElementById('seed').value.trim();
+            if (!seed) {
+                alert('Please enter a seed');
+                return;
+            }
+
+            try {
+                const now = new Date();
+                const currentTime = now.getTime();
+                
+                // Calculate OTPs for different time drifts
+                const drifts = [-120, -60, 0, 60, 120];
+                const tableBody = document.getElementById('otpTableBody');
+                const resultsDiv = document.getElementById('results');
+                const timeInfo = document.getElementById('timeInfo');
+                
+                // Clear previous results
+                tableBody.innerHTML = '';
+                
+                // Update time info
+                timeInfo.textContent = `Current time: ${now.toLocaleString()}`;
+                
+                // Generate OTP for each drift
+                drifts.forEach(drift => {
+                    const driftTime = currentTime + (drift * 1000);
+                    const otp = generateTOTP(seed, driftTime);
+                    
+                    const row = document.createElement('tr');
+                    
+                    const driftCell = document.createElement('td');
+                    driftCell.textContent = `${drift} seconds`;
+                    
+                    // Apply appropriate class based on drift
+                    if (drift < 0) {
+                        driftCell.className = 'past';
+                    } else if (drift > 0) {
+                        driftCell.className = 'future';
+                    } else {
+                        driftCell.className = 'current';
+                    }
+                    
+                    const otpCell = document.createElement('td');
+                    otpCell.innerHTML = `<span class="otp-code">${otp}</span>`;
+                    
+                    row.appendChild(driftCell);
+                    row.appendChild(otpCell);
+                    tableBody.appendChild(row);
+                });
+                
+                // Show results
+                resultsDiv.style.display = 'block';
+                
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+        
+        // Calculate OTPs on page load with default seed
+        window.addEventListener('load', calculateOTPs);
+    </script>
+</body>
+</html>
