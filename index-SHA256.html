@@ -43,7 +43,7 @@
 					 
 					  
 					  <div class="input">
-		<input style="font-size:small" type="text" size="66" name="secret" id="secret" class="xlarge" value="3377FRG7XZKXQLENNW7AZNT5QOCQE5ND6UNRQIV3QXHFXEUKPU3Q" onchange="updateOtp();   return false; " onKeyup="updateOtp();   return false; " onClick="updateOtp();   return false;  " /> 
+		<input style="font-size:small" type="text" size="66" name="secret" id="secret" class="xlarge" value="JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP" onchange="updateOtp();   return false; " onKeyup="updateOtp();   return false; " onClick="updateOtp();   return false;  " /> 
 					  <button class="btn btn-primary btn-sm" onclick=" inputHex(); updateOtp();   return false;">⇥ enter HEX</button>
 					  
 					  <button class="btn btn-primary btn-sm" onclick="$('#secret').val(randombase32()); updateOtp();   return false;">↝ random</button>
@@ -271,7 +271,7 @@ function download(){
   var text = "";
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 
-  for (var i = 0; i < 64; i++)
+  for (var i = 0; i < 48; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length));
 
   return text;
@@ -440,3 +440,4 @@ document.frmConvert.JSON.value = JSON.stringify({
 </script>
 		
 		</html>
+
