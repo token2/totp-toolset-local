@@ -271,10 +271,12 @@ function download(){
   var text = "";
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 
+	 
   for (var i = 0; i < 48; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length));
 
   return text;
+	 
 }
 
 if ($('#secret').val()=="") {
@@ -440,4 +442,5 @@ document.frmConvert.JSON.value = JSON.stringify({
 </script>
 		
 		</html>
+
 
